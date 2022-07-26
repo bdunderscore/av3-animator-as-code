@@ -503,6 +503,19 @@ namespace AnimatorAsCode.V0
             return this;
         }
 
+        public AacFlState DrivingCopies(AacFlBoolParameter source, AacFlBoolParameter destination)
+        {
+            CreateDriverBehaviorIfNotExists();
+            _driver.parameters.Add(new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Copy,
+                source = source.Name,
+                name = destination.Name,
+                convertRange = false
+            });
+            return this;
+        }
+        
         public AacFlState DrivingCopies(AacFlIntParameter source, AacFlIntParameter destination)
         {
             CreateDriverBehaviorIfNotExists();
