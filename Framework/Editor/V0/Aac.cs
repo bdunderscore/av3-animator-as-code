@@ -95,7 +95,7 @@ namespace AnimatorAsCode.V0
         private readonly AnimatorController _animatorController;
         private readonly AacConfiguration _configuration;
         private readonly string _fullLayerName;
-        private readonly AacFlStateMachine _stateMachine;
+        public readonly AacFlStateMachine _stateMachine;
 
         internal AacFlLayer(AnimatorController animatorController, AacConfiguration configuration, AacFlStateMachine stateMachine, string fullLayerName)
         {
