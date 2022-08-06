@@ -113,7 +113,7 @@ namespace AnimatorAsCode.V0
 
     public class AacFlStateMachine : AacAnimatorNode<AacFlStateMachine>
     {
-        private static readonly PropertyInfo PropPushUndo = typeof(AnimatorState).GetProperty("pushUndo", 
+        private static readonly PropertyInfo PropPushUndo = typeof(AnimatorStateMachine).GetProperty("pushUndo", 
             BindingFlags.NonPublic | BindingFlags.Instance);
         
         public readonly AnimatorStateMachine Machine;
