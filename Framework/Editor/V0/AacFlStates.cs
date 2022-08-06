@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
@@ -112,6 +113,9 @@ namespace AnimatorAsCode.V0
 
     public class AacFlStateMachine : AacAnimatorNode<AacFlStateMachine>
     {
+        private static readonly PropertyInfo PropPushUndo = typeof(AnimatorState).GetProperty("pushUndo", 
+            BindingFlags.NonPublic | BindingFlags.Instance);
+        
         public readonly AnimatorStateMachine Machine;
         private readonly AnimationClip _emptyClip;
         private readonly AacBackingAnimator _backingAnimator;
@@ -126,6 +130,8 @@ namespace AnimatorAsCode.V0
         internal AacFlStateMachine(AnimatorStateMachine machine, AnimationClip emptyClip, AacBackingAnimator backingAnimator, IAacDefaultsProvider defaultsProvider, AacFlStateMachine parent = null)
             : base(parent, defaultsProvider)
         {
+            PropPushUndo.SetValue(machine, false);
+            
             Machine = machine;
             _emptyClip = emptyClip;
             _backingAnimator = backingAnimator;
@@ -315,6 +321,8 @@ namespace AnimatorAsCode.V0
 
     public class AacFlState : AacAnimatorNode<AacFlState>
     {
+        private static readonly PropertyInfo PropPushUndo = typeof(AnimatorState).GetProperty("pushUndo", 
+            BindingFlags.NonPublic | BindingFlags.Instance);
         public readonly AnimatorState State;
         private readonly AnimatorStateMachine _machine;
         private VRCAvatarParameterDriver _driver;
@@ -326,6 +334,7 @@ namespace AnimatorAsCode.V0
         {
             State = state;
             _machine = parentMachine.Machine;
+            PropPushUndo.SetValue(state, false);
         }
 
         public AacFlState WithAnimation(Motion clip)
@@ -880,11 +889,14 @@ namespace AnimatorAsCode.V0
 
     public class AacFlTransition : AacFlNewTransitionContinuation
     {
+        private static readonly PropertyInfo PropPushUndo = typeof(AnimatorTransitionBase).GetProperty("pushUndo",
+            BindingFlags.Instance | BindingFlags.NonPublic);
         private readonly AnimatorStateTransition _transition;
 
         public AacFlTransition(AnimatorStateTransition transition, AnimatorStateMachine machine, AacTransitionEndpoint sourceNullableIfAny, AacTransitionEndpoint destinationNullableIfExits) : base(transition, machine, sourceNullableIfAny, destinationNullableIfExits)
         {
             _transition = transition;
+            PropPushUndo.SetValue(_transition, false);
         }
 
         public AacFlTransition WithSourceInterruption()
